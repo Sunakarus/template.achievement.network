@@ -6,17 +6,17 @@ In this exercise, we'll set up a simple auction contract. This will guide you th
 
 Let's write an Auction contract that does the following:
 
-First, an auction is idle. This means there's nothing to buy or sell yet and the auction is waiting for someone to start selling.
+First, an auction is _idle_. This means there's nothing to buy or sell yet and the auction is waiting for someone to start selling.
 
-Then someone offers an item to sell. This will be done by calling `startSelling(bytes32 _product, uint initialPrice)`. At this point, the auction goes from the idle state to the selling state and starts collecting offers.
+Then someone offers an item to sell. This will be done by calling `startSelling(bytes32 _product, uint initialPrice)`. At this point, the auction goes from the _idle_ state to the _selling_ state and starts collecting offers.
 
-Once the auction is in the selling state, anyone can offer an amount using `offer(uint price)`. This does not cost anything at this point, the buyer will only have to pay if they win the auction.
+Once the auction is in the _selling_ state, anyone can offer an amount using `offer(uint price)`. This does not cost anything at this point, the buyer will only have to pay if they win the auction.
 
-At any point, the seller (and only the seller) can call `acceptOffer()`. This means that the seller is happy with the highest bid so far and has agreed to sell the product to that bidder. The auction goes from the selling state to the accepted state - noone can offer anymore and the auction waits for the auction winner to pay the promised amount.
+At any point, the seller (and only the seller) can call `acceptOffer()`. This means that the seller is happy with the highest bid so far and has agreed to sell the product to that bidder. The auction goes from the _selling_ state to the _accepted_ state - noone can offer anymore and the auction waits for the auction winner to pay the promised amount.
 
 Once the offer has been accepted, the highest bidder will have to call `pay()`. This is a payable function so the buyer will have to attach a wei value (`msg.value`) equal to the offered amount. This amount will then be transferred to the seller and the auction is complete.
 
-At this point, the auction can go back to the idle state, waiting for anyone else to start selling their product.
+At this point, the auction can go back to the _idle_ state, waiting for anyone else to start selling their product.
 
 ## State machine
 
@@ -32,7 +32,12 @@ enum Status { Idle, Selling, Accepted }
 To enforce the state moves in the right direction, you'll want to write an `atState(Status state)` modifier that requires the contract to be in the correct state for functions like `offer()` or `pay()` to be called.
 
 {% exercise %}
-Fill in the blanks to complete the Auction contract. Use `require()` and modifiers to ensure the auction behaves correctly.
+Fill in the blanks to complete the Auction contract.
+
+{% hints %}
+- Use `require()` and modifiers to ensure the auction behaves correctly.
+- Use `msg.sender` to find out about the seller and buyer's addresses. Which functions can only be called by whom?
+- Verify your payment is correct! Check who's paying, how much their paying and ensure the seller receives the payment.
 
 {% initial %}
 pragma solidity ^0.4.24;
